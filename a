@@ -4,694 +4,218 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ساعت، آلارم، تایمر و کرنومتر</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --primary:#4285F4; --secondary:#34A853; --danger:#EA4335;
-  --purple:#9C27B0; --orange:#FF9800;
-  --bg-dark:#121212; --bg-light:#1E1E1E;
-  --text:#FFFFFF; --text2:#9E9E9E;
-}
+:root{--primary:#4285F4;--secondary:#34A853;--danger:#EA4335;--purple:#9C27B0;--bg-dark:#121212;--bg-light:#1E1E1E;--text:#FFF;--text2:#9E9E9E;}
 *{box-sizing:border-box;}
-body{
-  background:var(--bg-dark); margin:0; padding:0;
-  font-family:'Roboto',Tahoma,sans-serif; color:var(--text);
-  min-height:100vh; display:flex; flex-direction:column;
-  transition:all .3s ease;
-}
-.header{padding:16px; text-align:center; background:var(--bg-light);}
-.header h1{font-size:20px; font-weight:500; margin:0;}
-.clock-container{
-  flex:1; display:flex; flex-direction:column;
-  justify-content:center; align-items:center; padding:20px 0;
-}
-.time{font-size:120px; font-weight:300; letter-spacing:-4px; margin-bottom:-10px; line-height:1;}
-.seconds{font-size:36px; font-weight:300; vertical-align:top; opacity:.7;}
-.date{font-size:18px; font-weight:400; opacity:.7; margin-top:10px;}
-.tabs{display:flex; justify-content:center; margin-bottom:20px; flex-wrap:wrap; padding:0 10px;}
-.tab{
-  padding:10px 20px; cursor:pointer; background:#2D2D2D; border:none;
-  color:var(--text); font-size:16px; flex-grow:1; max-width:150px;
-  font-family:inherit; transition:background .2s;
-}
-.tab:hover{background:#3D3D3D;}
+body{background:var(--bg-dark);margin:0;padding:0;font-family:Tahoma,sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+.header{padding:16px;text-align:center;background:var(--bg-light);}
+.header h1{font-size:20px;margin:0;}
+.clock-container{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px 0;}
+.time{font-size:120px;font-weight:300;letter-spacing:-4px;margin-bottom:-10px;line-height:1;}
+.seconds{font-size:36px;opacity:.7;}
+.date{font-size:18px;opacity:.7;margin-top:10px;}
+.tabs{display:flex;justify-content:center;margin-bottom:20px;flex-wrap:wrap;padding:0 10px;}
+.tab{padding:10px 20px;cursor:pointer;background:#2D2D2D;border:none;color:var(--text);font-size:16px;flex-grow:1;max-width:150px;font-family:inherit;}
 .tab.active{background:var(--primary);}
 .tab:nth-child(1){border-radius:8px 0 0 8px;}
 .tab:nth-child(5){border-radius:0 8px 8px 0;}
-.content-container{
-  background:var(--bg-light); padding:20px; border-radius:16px;
-  margin:0 auto 20px; width:80%; max-width:500px;
-}
+.content-container{background:var(--bg-light);padding:20px;border-radius:16px;margin:0 auto 20px;width:80%;max-width:500px;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
-.form-group{display:flex; flex-direction:column; margin-bottom:15px;}
-label{margin-bottom:8px; font-size:14px; color:var(--text2);}
-input,select{
-  padding:12px; border-radius:8px; border:1px solid #333;
-  background:#2D2D2D; color:white; font-size:16px; font-family:inherit; width:100%;
-}
-button{
-  color:white; border:none; padding:12px; border-radius:8px;
-  font-size:16px; font-weight:500; cursor:pointer; margin-top:10px;
-  font-family:inherit; transition:opacity .2s;
-}
-button:hover:not(:disabled){opacity:.9;}
-button:disabled{opacity:.4; cursor:not-allowed;}
-.display{font-size:48px; text-align:center; margin:20px 0; font-family:monospace; direction:ltr;}
-.controls{display:flex; justify-content:center; gap:10px; flex-wrap:wrap;}
-.control-btn{padding:10px 20px; border-radius:8px; font-size:16px; min-width:80px;}
+.form-group{display:flex;flex-direction:column;margin-bottom:15px;}
+label{margin-bottom:8px;font-size:14px;color:var(--text2);}
+input,select{padding:12px;border-radius:8px;border:1px solid #333;background:#2D2D2D;color:white;font-size:16px;font-family:inherit;width:100%;}
+button{color:white;border:none;padding:12px;border-radius:8px;font-size:16px;cursor:pointer;margin-top:10px;font-family:inherit;}
+button:disabled{opacity:.4;cursor:not-allowed;}
+.display{font-size:48px;text-align:center;margin:20px 0;font-family:monospace;direction:ltr;}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.control-btn{padding:10px 20px;border-radius:8px;font-size:16px;min-width:80px;}
 .primary-btn{background:var(--primary);}
 .secondary-btn{background:var(--secondary);}
 .danger-btn{background:var(--danger);}
 .purple-btn{background:var(--purple);}
-.orange-btn{background:var(--orange);}
 .items-list{margin-top:20px;}
-.item{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:12px; background:#2D2D2D; border-radius:8px;
-  margin-bottom:10px; gap:10px;
-}
-.delete-btn{
-  background:var(--danger); color:white; border:none;
-  padding:6px 12px; border-radius:4px; cursor:pointer; margin:0; font-size:14px;
-}
-.lap-list{margin-top:20px; max-height:200px; overflow-y:auto;}
-.lap-item{
-  padding:8px; border-bottom:1px solid #333;
-  display:flex; justify-content:space-between;
-  font-family:monospace; direction:ltr;
-}
-.world-clock-container{display:flex; flex-direction:column; align-items:center;}
-.globe-container{position:relative; width:250px; height:250px; margin:20px auto;}
-.globe{
-  width:100%; height:100%;
-  background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Earth_-_Blender_OpenGL.png/1200px-Earth_-_Blender_OpenGL.png') no-repeat center center;
-  background-size:cover; border-radius:50%;
-  box-shadow:0 0 20px rgba(66,133,244,.5);
-  position:relative; animation:rotate 60s linear infinite;
-}
-@keyframes rotate{from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
-.city-marker{
-  position:absolute; width:8px; height:8px; background:var(--danger);
-  border-radius:50%; transform:translate(-50%,-50%); cursor:pointer; z-index:2;
-}
-.city-marker::after{
-  content:attr(data-city); position:absolute; white-space:nowrap;
-  font-size:12px; color:white; background:rgba(0,0,0,.85);
-  padding:2px 6px; border-radius:4px; top:-25px; left:50%;
-  transform:translateX(-50%); opacity:0; transition:opacity .3s; pointer-events:none;
-}
-.city-marker:hover::after{opacity:1;}
-.selected-city{font-size:24px; margin:10px 0; color:var(--primary);}
-.city-time{font-size:36px; margin:10px 0; font-family:monospace; direction:ltr;}
-.city-date{font-size:16px; opacity:.8;}
-.city-selector{width:100%; margin:15px 0;}
-.cities-grid{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:10px; margin-top:20px; width:100%;
-}
-.city-card{
-  background:#2D2D2D; padding:10px; border-radius:8px;
-  text-align:center; cursor:pointer; transition:all .3s;
-}
-.city-card:hover{background:#3D3D3D;}
+.item{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#2D2D2D;border-radius:8px;margin-bottom:10px;gap:10px;}
+.delete-btn{background:var(--danger);color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;margin:0;font-size:14px;}
+.lap-list{margin-top:20px;max-height:200px;overflow-y:auto;}
+.lap-item{padding:8px;border-bottom:1px solid #333;display:flex;justify-content:space-between;font-family:monospace;direction:ltr;}
+.world-clock-container{display:flex;flex-direction:column;align-items:center;}
+.globe-container{position:relative;width:250px;height:250px;margin:20px auto;}
+.globe{width:100%;height:100%;background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Earth_-_Blender_OpenGL.png/1200px-Earth_-_Blender_OpenGL.png') no-repeat center center;background-size:cover;border-radius:50%;box-shadow:0 0 20px rgba(66,133,244,.5);animation:rotate 60s linear infinite;}
+@keyframes rotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.city-marker{position:absolute;width:8px;height:8px;background:var(--danger);border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;z-index:2;}
+.selected-city{font-size:24px;margin:10px 0;color:var(--primary);}
+.city-time{font-size:36px;margin:10px 0;font-family:monospace;direction:ltr;}
+.city-date{font-size:16px;opacity:.8;}
+.city-selector{width:100%;margin:15px 0;}
+.cities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:20px;width:100%;}
+.city-card{background:#2D2D2D;padding:10px;border-radius:8px;text-align:center;cursor:pointer;}
 .city-card.active{background:var(--primary);}
-.city-name{font-weight:500; margin-bottom:5px; font-size:14px;}
-.city-time-small{font-size:14px; font-family:monospace; direction:ltr;}
-.sleep-mode-form,.auto-sleep-mode{background:#2D2D2D; padding:15px; border-radius:8px; margin-bottom:20px;}
-.sleep-mode-form h3,.auto-sleep-mode h3{margin-top:0; font-size:16px;}
-.sleep-history{margin-top:20px;}
-.sleep-history .item{
-  display:flex; justify-content:space-between;
-  padding:10px; background:#2D2D2D; border-radius:8px; margin-bottom:8px;
-}
+.city-name{font-weight:500;margin-bottom:5px;font-size:14px;}
+.city-time-small{font-size:14px;font-family:monospace;direction:ltr;}
+.sleep-mode-form,.auto-sleep-mode{background:#2D2D2D;padding:15px;border-radius:8px;margin-bottom:20px;}
+.sleep-history .item{display:flex;justify-content:space-between;padding:10px;background:#2D2D2D;border-radius:8px;margin-bottom:8px;}
 .sleep-history .sleep-time{color:var(--purple);}
 .sleep-history .wakeup-time{color:var(--secondary);}
-.sleep-history .date{font-size:12px; opacity:.7;}
-small{font-size:12px; color:var(--text2); margin-top:4px;}
+.sleep-history .date{font-size:12px;opacity:.7;}
+small{font-size:12px;color:var(--text2);margin-top:4px;}
 body.sleep-mode{filter:grayscale(100%) brightness(.7);}
-body.sleep-mode .header,body.sleep-mode .content-container{background:#000 !important;}
-@media (max-width:600px){
-  .time{font-size:80px;}
-  .seconds{font-size:24px;}
-  .content-container{width:90%; padding:15px;}
-  .display{font-size:32px;}
-  .tab{padding:8px 10px; font-size:13px; max-width:none;}
-  .globe-container{width:200px; height:200px;}
-  .cities-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
-}
+@media (max-width:600px){.time{font-size:80px;}.seconds{font-size:24px;}.content-container{width:90%;padding:15px;}.display{font-size:32px;}.tab{padding:8px 10px;font-size:13px;max-width:none;}.globe-container{width:200px;height:200px;}}
 </style>
 </head>
 <body>
 <div class="header"><h1>ساعت، آلارم، تایمر و کرنومتر</h1></div>
-
 <div class="clock-container">
-  <div class="time" id="hours-minutes">--:--</div>
-  <span class="seconds" id="seconds">--</span>
-  <div class="date" id="date">--- -- ----</div>
+<div class="time" id="hours-minutes">--:--</div>
+<span class="seconds" id="seconds">--</span>
+<div class="date" id="date">--- -- ----</div>
 </div>
-
 <div class="tabs">
-  <button class="tab active" data-tab="alarm-tab">آلارم</button>
-  <button class="tab" data-tab="timer-tab">تایمر</button>
-  <button class="tab" data-tab="stopwatch-tab">کرنومتر</button>
-  <button class="tab" data-tab="world-clock-tab">ساعت جهانی</button>
-  <button class="tab" data-tab="sleep-time-tab">تایم خواب</button>
+<button class="tab active" data-tab="alarm-tab">آلارم</button>
+<button class="tab" data-tab="timer-tab">تایمر</button>
+<button class="tab" data-tab="stopwatch-tab">کرنومتر</button>
+<button class="tab" data-tab="world-clock-tab">ساعت جهانی</button>
+<button class="tab" data-tab="sleep-time-tab">تایم خواب</button>
 </div>
-
 <div class="content-container">
-  <!-- آلارم -->
-  <div id="alarm-tab" class="tab-content active">
-    <h2>تنظیم آلارم</h2>
-    <div class="alarm-form">
-      <div class="form-group">
-        <label for="alarm-time">زمان آلارم:</label>
-        <input type="time" id="alarm-time">
-      </div>
-      <div class="form-group">
-        <label for="alarm-name">عنوان آلارم (اختیاری):</label>
-        <input type="text" id="alarm-name" placeholder="مثلاً بیدار شدن">
-      </div>
-      <button class="primary-btn" id="set-alarm">تنظیم آلارم</button>
-    </div>
-    <div class="items-list" id="alarms-list"><h3>آلارم‌های فعال</h3></div>
-  </div>
-
-  <!-- تایمر -->
-  <div id="timer-tab" class="tab-content">
-    <h2>تایمر</h2>
-    <div class="timer-form">
-      <div class="form-group">
-        <label for="timer-hours">ساعت:</label>
-        <input type="number" id="timer-hours" min="0" max="23" value="0">
-      </div>
-      <div class="form-group">
-        <label for="timer-minutes">دقیقه:</label>
-        <input type="number" id="timer-minutes" min="0" max="59" value="0">
-      </div>
-      <div class="form-group">
-        <label for="timer-seconds">ثانیه:</label>
-        <input type="number" id="timer-seconds" min="0" max="59" value="0">
-      </div>
-      <div class="display" id="timer-display">00:00:00</div>
-      <div class="controls">
-        <button class="control-btn secondary-btn" id="start-timer">شروع</button>
-        <button class="control-btn danger-btn" id="stop-timer" disabled>توقف</button>
-        <button class="control-btn purple-btn" id="reset-timer">تنظیم مجدد</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- کرنومتر -->
-  <div id="stopwatch-tab" class="tab-content">
-    <h2>کرنومتر</h2>
-    <div class="stopwatch-form">
-      <div class="display" id="stopwatch-display">00:00:00.00</div>
-      <div class="controls">
-        <button class="control-btn secondary-btn" id="start-stopwatch">شروع</button>
-        <button class="control-btn danger-btn" id="stop-stopwatch" disabled>توقف</button>
-        <button class="control-btn primary-btn" id="lap-stopwatch" disabled>دور</button>
-        <button class="control-btn purple-btn" id="reset-stopwatch">تنظیم مجدد</button>
-      </div>
-      <div class="lap-list" id="lap-list"><h3>دورها</h3></div>
-    </div>
-  </div>
-
-  <!-- ساعت جهانی -->
-  <div id="world-clock-tab" class="tab-content">
-    <h2>ساعت جهانی</h2>
-    <div class="world-clock-container">
-      <div class="globe-container"><div class="globe" id="globe"></div></div>
-      <div class="selected-city" id="selected-city-name">تهران</div>
-      <div class="city-time" id="selected-city-time">--:--:--</div>
-      <div class="city-date" id="selected-city-date">--- -- ----</div>
-      <select class="city-selector" id="city-selector">
-        <option value="Asia/Tehran">تهران</option>
-        <option value="America/New_York">نیویورک</option>
-        <option value="Europe/London">لندن</option>
-        <option value="Asia/Tokyo">توکیو</option>
-        <option value="Australia/Sydney">سیدنی</option>
-        <option value="Europe/Paris">پاریس</option>
-        <option value="Asia/Dubai">دبی</option>
-        <option value="Asia/Shanghai">شانگهای</option>
-      </select>
-      <div class="cities-grid" id="cities-grid"></div>
-    </div>
-  </div>
-
-  <!-- تایم خواب -->
-  <div id="sleep-time-tab" class="tab-content">
-    <h2>تنظیم تایم خواب</h2>
-    <div class="sleep-mode-form">
-      <h3>تنظیمات دستی</h3>
-      <div class="form-group">
-        <label for="bedtime">ساعت خواب:</label>
-        <input type="time" id="bedtime">
-      </div>
-      <div class="form-group">
-        <label for="wakeup-time">ساعت بیداری:</label>
-        <input type="time" id="wakeup-time">
-      </div>
-      <button class="primary-btn" id="set-sleep-schedule">تنظیم برنامه خواب</button>
-    </div>
-    <div class="auto-sleep-mode">
-      <h3>تنظیمات خودکار</h3>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" id="auto-sleep-detection" style="width:auto; margin-left:8px;">
-          تشخیص خودکار ساعت خواب
-        </label>
-        <small>اگر از ساعت 11 شب تا 5 صبح به مدت 1 ساعت از گوشی استفاده نکنید، حالت خواب فعال می‌شود</small>
-      </div>
-      <div class="form-group">
-        <label for="default-sleep-duration">مدت زمان خواب پیش‌فرض:</label>
-        <input type="number" id="default-sleep-duration" min="1" max="12" value="8.5" step="0.5">
-        <small>ساعت (به طور پیش‌فرض 8.5 ساعت)</small>
-      </div>
-    </div>
-    <div class="sleep-history">
-      <h3>تاریخچه خواب</h3>
-      <div class="items-list" id="sleep-history-list"></div>
-    </div>
-  </div>
+<div id="alarm-tab" class="tab-content active">
+<h2>تنظیم آلارم</h2>
+<div class="form-group"><label for="alarm-time">زمان آلارم:</label><input type="time" id="alarm-time"></div>
+<div class="form-group"><label for="alarm-name">عنوان (اختیاری):</label><input type="text" id="alarm-name" placeholder="مثلاً بیدار شدن"></div>
+<button class="primary-btn" id="set-alarm">تنظیم آلارم</button>
+<div class="items-list" id="alarms-list"><h3>آلارم‌های فعال</h3></div>
 </div>
-
+<div id="timer-tab" class="tab-content">
+<h2>تایمر</h2>
+<div class="form-group"><label>ساعت:</label><input type="number" id="timer-hours" min="0" max="23" value="0"></div>
+<div class="form-group"><label>دقیقه:</label><input type="number" id="timer-minutes" min="0" max="59" value="0"></div>
+<div class="form-group"><label>ثانیه:</label><input type="number" id="timer-seconds" min="0" max="59" value="0"></div>
+<div class="display" id="timer-display">00:00:00</div>
+<div class="controls">
+<button class="control-btn secondary-btn" id="start-timer">شروع</button>
+<button class="control-btn danger-btn" id="stop-timer" disabled>توقف</button>
+<button class="control-btn purple-btn" id="reset-timer">تنظیم مجدد</button>
+</div>
+</div>
+<div id="stopwatch-tab" class="tab-content">
+<h2>کرنومتر</h2>
+<div class="display" id="stopwatch-display">00:00:00.00</div>
+<div class="controls">
+<button class="control-btn secondary-btn" id="start-stopwatch">شروع</button>
+<button class="control-btn danger-btn" id="stop-stopwatch" disabled>توقف</button>
+<button class="control-btn primary-btn" id="lap-stopwatch" disabled>دور</button>
+<button class="control-btn purple-btn" id="reset-stopwatch">تنظیم مجدد</button>
+</div>
+<div class="lap-list" id="lap-list"><h3>دورها</h3></div>
+</div>
+<div id="world-clock-tab" class="tab-content">
+<h2>ساعت جهانی</h2>
+<div class="world-clock-container">
+<div class="globe-container"><div class="globe" id="globe"></div></div>
+<div class="selected-city" id="selected-city-name">تهران</div>
+<div class="city-time" id="selected-city-time">--:--:--</div>
+<div class="city-date" id="selected-city-date">--- -- ----</div>
+<select class="city-selector" id="city-selector">
+<option value="Asia/Tehran">تهران</option>
+<option value="America/New_York">نیویورک</option>
+<option value="Europe/London">لندن</option>
+<option value="Asia/Tokyo">توکیو</option>
+<option value="Australia/Sydney">سیدنی</option>
+<option value="Europe/Paris">پاریس</option>
+<option value="Asia/Dubai">دبی</option>
+<option value="Asia/Shanghai">شانگهای</option>
+</select>
+<div class="cities-grid" id="cities-grid"></div>
+</div>
+</div>
+<div id="sleep-time-tab" class="tab-content">
+<h2>تنظیم تایم خواب</h2>
+<div class="sleep-mode-form">
+<h3>تنظیمات دستی</h3>
+<div class="form-group"><label>ساعت خواب:</label><input type="time" id="bedtime"></div>
+<div class="form-group"><label>ساعت بیداری:</label><input type="time" id="wakeup-time"></div>
+<button class="primary-btn" id="set-sleep-schedule">تنظیم برنامه خواب</button>
+</div>
+<div class="auto-sleep-mode">
+<h3>تنظیمات خودکار</h3>
+<div class="form-group"><label><input type="checkbox" id="auto-sleep-detection" style="width:auto;"> تشخیص خودکار</label><small>اگر 1 ساعت از گوشی استفاده نکنید، حالت خواب فعال می‌شود</small></div>
+<div class="form-group"><label>مدت خواب پیش‌فرض (ساعت):</label><input type="number" id="default-sleep-duration" min="1" max="12" value="8.5" step="0.5"></div>
+</div>
+<div class="sleep-history"><h3>تاریخچه خواب</h3><div class="items-list" id="sleep-history-list"></div></div>
+</div>
+</div>
 <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
 <audio id="timer-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-sound-alert-digital-clock-1035.mp3" preload="auto"></audio>
-
 <script>
 (function(){
-  'use strict';
-
-  /* ==================== متغیرها ==================== */
-  var alarms = [];
-  var timerInterval = null;
-  var timerSecondsLeft = 0;
-  var isTimerRunning = false;
-
-  var stopwatchInterval = null;
-  var stopwatchStartTime = 0;
-  var stopwatchElapsed = 0;
-  var isStopwatchRunning = false;
-  var laps = [];
-
-  var alarmSound = document.getElementById('alarm-sound');
-  var timerSound = document.getElementById('timer-sound');
-
-  var worldCities = [
-    { id:'Asia/Tehran',      name:'تهران',   lat:35.68,  lng:51.38,  color:'#EA4335' },
-    { id:'America/New_York', name:'نیویورک', lat:40.71,  lng:-74.01, color:'#4285F4' },
-    { id:'Europe/London',    name:'لندن',    lat:51.51,  lng:-0.13,  color:'#34A853' },
-    { id:'Asia/Tokyo',       name:'توکیو',   lat:35.68,  lng:139.77, color:'#FBBC05' },
-    { id:'Australia/Sydney', name:'سیدنی',   lat:-33.87, lng:151.21, color:'#9C27B0' },
-    { id:'Europe/Paris',     name:'پاریس',   lat:48.86,  lng:2.35,   color:'#FF9800' },
-    { id:'Asia/Dubai',       name:'دبی',     lat:25.27,  lng:55.31,  color:'#00BCD4' },
-    { id:'Asia/Shanghai',    name:'شانگهای', lat:31.23,  lng:121.47, color:'#8BC34A' }
-  ];
-  var selectedCity = worldCities[0];
-
-  var sleepSchedule = {
-    manualBedtime: null,
-    manualWakeupTime: null,
-    autoDetectionEnabled: false,
-    defaultSleepDuration: 8.5,
-    lastInteractionTime: null,
-    sleepModeActive: false
-  };
-  var sleepHistory = [];
-
-  /* ==================== ابزارها ==================== */
-  function pad2(n){ return (n<10?'0':'')+n; }
-  function formatHM(d){ return pad2(d.getHours())+':'+pad2(d.getMinutes()); }
-
-  /* ==================== حالت خواب ==================== */
-  function activateSleepMode(){
-    if (sleepSchedule.sleepModeActive) return;
-    document.body.classList.add('sleep-mode');
-    sleepSchedule.sleepModeActive = true;
-    sleepHistory.push({ bedtime:new Date(), wakeupTime:null, autoDetected:true });
-    saveSleepData();
-    renderSleepHistory();
-  }
-  function deactivateSleepMode(){
-    if (!sleepSchedule.sleepModeActive) return;
-    document.body.classList.remove('sleep-mode');
-    sleepSchedule.sleepModeActive = false;
-    if (sleepHistory.length>0 && !sleepHistory[sleepHistory.length-1].wakeupTime){
-      sleepHistory[sleepHistory.length-1].wakeupTime = new Date();
-      saveSleepData();
-      renderSleepHistory();
-    }
-  }
-  function checkUserInactivity(){
-    if (!sleepSchedule.autoDetectionEnabled || sleepSchedule.sleepModeActive) return;
-    var now = new Date();
-    var h = now.getHours();
-    if (h>=23 || h<5){
-      if (sleepSchedule.lastInteractionTime){
-        var inactive = (now - sleepSchedule.lastInteractionTime)/(1000*60*60);
-        if (inactive>=1){
-          activateSleepMode();
-          var wake = new Date();
-          wake.setHours(wake.getHours()+sleepSchedule.defaultSleepDuration);
-          setWakeupAlarm(wake);
-        }
-      }
-    }
-  }
-  function setWakeupAlarm(wakeTime){
-    var t = formatHM(wakeTime);
-    if (alarms.some(function(a){return a.time===t && a.name==='بیداری خودکار';})) return;
-    alarms.push({ time:t, name:'بیداری خودکار', triggered:false });
-    saveAlarmsToLocalStorage();
-    renderAlarms();
-  }
-
-  /* ==================== ذخیره‌سازی ==================== */
-  function saveSleepData(){
-    try{
-      localStorage.setItem('sleepSchedule', JSON.stringify(sleepSchedule));
-      localStorage.setItem('sleepHistory', JSON.stringify(sleepHistory));
-    }catch(e){}
-  }
-  function loadSleepData(){
-    try{
-      var s = localStorage.getItem('sleepSchedule');
-      var h = localStorage.getItem('sleepHistory');
-      if (s){
-        var p = JSON.parse(s);
-        for (var k in p) if (p.hasOwnProperty(k)) sleepSchedule[k] = p[k];
-        if (sleepSchedule.manualBedtime) sleepSchedule.manualBedtime = new Date(sleepSchedule.manualBedtime);
-        if (sleepSchedule.manualWakeupTime) sleepSchedule.manualWakeupTime = new Date(sleepSchedule.manualWakeupTime);
-        if (sleepSchedule.lastInteractionTime) sleepSchedule.lastInteractionTime = new Date(sleepSchedule.lastInteractionTime);
-      }
-      if (h){
-        sleepHistory = JSON.parse(h).map(function(item){
-          return {
-            bedtime: item.bedtime ? new Date(item.bedtime) : null,
-            wakeupTime: item.wakeupTime ? new Date(item.wakeupTime) : null,
-            autoDetected: !!item.autoDetected
-          };
-        });
-      }
-    }catch(e){}
-  }
-  function saveAlarmsToLocalStorage(){
-    try{ localStorage.setItem('alarms', JSON.stringify(alarms)); }catch(e){}
-  }
-  function loadAlarmsFromLocalStorage(){
-    try{
-      var s = localStorage.getItem('alarms');
-      if (s) alarms = JSON.parse(s);
-    }catch(e){}
-  }
-
-  /* ==================== رندر خواب ==================== */
-  function renderSleepHistory(){
-    var list = document.getElementById('sleep-history-list');
-    list.innerHTML = '';
-    if (sleepHistory.length===0){
-      list.innerHTML = '<p>تاریخچه‌ای وجود ندارد</p>';
-      return;
-    }
-    var recent = sleepHistory.slice(-10).reverse();
-    recent.forEach(function(item){
-      var div = document.createElement('div');
-      div.className = 'item';
-      var bt = item.bedtime ? item.bedtime.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'}) : '--:--';
-      var bd = item.bedtime ? item.bedtime.toLocaleDateString('fa-IR') : '';
-      var wt = item.wakeupTime
-        ? '<span class="wakeup-time">'+item.wakeupTime.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})+'</span>'
-        : '<span>در حال خواب</span>';
-      div.innerHTML = '<div><span class="sleep-time">'+bt+'</span> → '+wt+
-        '<div class="date">'+bd+'</div></div>'+
-        '<div>'+(item.autoDetected?'خودکار':'دستی')+'</div>';
-      list.appendChild(div);
-    });
-  }
-
-  /* ==================== ساعت ==================== */
-  function updateClock(){
-    var now = new Date();
-    document.getElementById('hours-minutes').textContent = formatHM(now);
-    document.getElementById('seconds').textContent = pad2(now.getSeconds());
-    document.getElementById('date').textContent = now.toLocaleDateString('fa-IR',
-      {weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    checkAlarms(now);
-    updateWorldClock();
-    checkUserInactivity();
-    checkManualSleepSchedule(now);
-  }
-
-  function checkManualSleepSchedule(now){
-    if (!sleepSchedule.manualBedtime || !sleepSchedule.manualWakeupTime) return;
-    var cur = now.getHours()*60 + now.getMinutes();
-    var bed = sleepSchedule.manualBedtime.getHours()*60 + sleepSchedule.manualBedtime.getMinutes();
-    var wake = sleepSchedule.manualWakeupTime.getHours()*60 + sleepSchedule.manualWakeupTime.getMinutes();
-    var inSleep = (bed < wake) ? (cur>=bed && cur<wake) : (cur>=bed || cur<wake);
-    if (inSleep && !sleepSchedule.sleepModeActive) activateSleepMode();
-    else if (!inSleep && sleepSchedule.sleepModeActive) deactivateSleepMode();
-  }
-
-  /* ==================== آلارم ==================== */
-  function checkAlarms(now){
-    if (now.getSeconds() !== 0) return;
-    var t = formatHM(now);
-    alarms.forEach(function(alarm){
-      if (alarm.time===t && !alarm.triggered){
-        alarm.triggered = true;
-        triggerAlarm(alarm);
-        setTimeout(function(){ alarm.triggered = false; }, 60000);
-      }
-    });
-  }
-  function triggerAlarm(alarm){
-    if (sleepSchedule.sleepModeActive) deactivateSleepMode();
-    try{ alarmSound.currentTime = 0; alarmSound.play().catch(function(){}); }catch(e){}
-    var title = alarm.name || 'آلارم';
-    if ('Notification' in window && Notification.permission==='granted'){
-      try{ new Notification('زمان '+title+' رسیده است', {body:'ساعت '+alarm.time}); }catch(e){}
-    }
-    alert('آلارم '+title+'!\nساعت '+alarm.time);
-  }
-  function renderAlarms(){
-    var list = document.getElementById('alarms-list');
-    list.innerHTML = '<h3>آلارم‌های فعال</h3>';
-    if (alarms.length===0){
-      list.innerHTML += '<p>هیچ آلارمی تنظیم نشده است</p>';
-      return;
-    }
-    alarms.forEach(function(alarm, idx){
-      var div = document.createElement('div');
-      div.className = 'item';
-      div.innerHTML = '<div><strong>'+alarm.time+'</strong>'+(alarm.name?' - '+alarm.name:'')+'</div>'+
-        '<button class="delete-btn" data-index="'+idx+'">حذف</button>';
-      list.appendChild(div);
-    });
-    list.querySelectorAll('.delete-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var i = parseInt(this.getAttribute('data-index'),10);
-        alarms.splice(i,1);
-        saveAlarmsToLocalStorage();
-        renderAlarms();
-      });
-    });
-  }
-
-  /* ==================== ساعت جهانی ==================== */
-  function getTimeParts(tz, withSec){
-    var opts = { timeZone:tz, hour:'2-digit', minute:'2-digit', hour12:false };
-    if (withSec) opts.second = '2-digit';
-    var parts = new Intl.DateTimeFormat('en-GB', opts).formatToParts(new Date());
-    var out = {};
-    parts.forEach(function(p){ out[p.type] = p.value; });
-    return out;
-  }
-  function updateWorldClock(){
-    var t = getTimeParts(selectedCity.id, true);
-    document.getElementById('selected-city-time').textContent = t.hour+':'+t.minute+':'+t.second;
-    document.getElementById('selected-city-name').textContent = selectedCity.name;
-    document.getElementById('selected-city-date').textContent =
-      new Intl.DateTimeFormat('fa-IR',{timeZone:selectedCity.id,weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(new Date());
-    updateAllCitiesTime();
-  }
-  function updateAllCitiesTime(){
-    var grid = document.getElementById('cities-grid');
-    grid.innerHTML = '';
-    worldCities.forEach(function(city){
-      var t = getTimeParts(city.id, false);
-      var card = document.createElement('div');
-      card.className = 'city-card' + (city.id===selectedCity.id?' active':'');
-      card.innerHTML = '<div class="city-name">'+city.name+'</div>'+
-                       '<div class="city-time-small">'+t.hour+':'+t.minute+'</div>';
-      card.addEventListener('click', function(){ selectCity(city); });
-      grid.appendChild(card);
-    });
-  }
-  function selectCity(city){
-    selectedCity = city;
-    document.getElementById('city-selector').value = city.id;
-    updateWorldClock();
-    renderGlobeMarkers();
-  }
-  function renderGlobeMarkers(){
-    var globe = document.getElementById('globe');
-    globe.innerHTML = '';
-    worldCities.forEach(function(city){
-      var marker = document.createElement('div');
-      marker.className = 'city-marker';
-      marker.setAttribute('data-city', city.name);
-      marker.style.backgroundColor = city.color;
-      var x = 50 + 45*Math.cos((city.lng-90)*Math.PI/180)*Math.cos(city.lat*Math.PI/180);
-      var y = 50 + 45*Math.sin((city.lng-90)*Math.PI/180)*Math.cos(city.lat*Math.PI/180);
-      marker.style.left = x+'%';
-      marker.style.top = y+'%';
-      if (city.id===selectedCity.id){
-        marker.style.width = '12px';
-        marker.style.height = '12px';
-        marker.style.boxShadow = '0 0 10px '+city.color;
-      }
-      marker.addEventListener('click', function(){ selectCity(city); });
-      globe.appendChild(marker);
-    });
-  }
-
-  /* ==================== تب‌ها ==================== */
-  function initTabs(){
-    var tabs = document.querySelectorAll('.tab');
-    for (var i=0;i<tabs.length;i++){
-      tabs[i].addEventListener('click', function(){
-        var all = document.querySelectorAll('.tab');
-        for (var j=0;j<all.length;j++) all[j].classList.remove('active');
-        var contents = document.querySelectorAll('.tab-content');
-        for (var k=0;k<contents.length;k++) contents[k].classList.remove('active');
-        this.classList.add('active');
-        var el = document.getElementById(this.getAttribute('data-tab'));
-        if (el) el.classList.add('active');
-      });
-    }
-  }
-
-  /* ==================== آلارم: تنظیم ==================== */
-  document.getElementById('set-alarm').addEventListener('click', function(){
-    var time = document.getElementById('alarm-time').value;
-    var name = document.getElementById('alarm-name').value.trim();
-    if (!time){ alert('لطفاً زمان آلارم را وارد کنید'); return; }
-    alarms.push({ time:time, name:name, triggered:false });
-    saveAlarmsToLocalStorage();
-    renderAlarms();
-    document.getElementById('alarm-time').value = '';
-    document.getElementById('alarm-name').value = '';
-  });
-
-  /* ==================== تایمر ==================== */
-  var startTimerBtn = document.getElementById('start-timer');
-  var stopTimerBtn  = document.getElementById('stop-timer');
-  var resetTimerBtn = document.getElementById('reset-timer');
-  var timerDisplay  = document.getElementById('timer-display');
-
-  function formatDuration(s){
-    return pad2(Math.floor(s/3600))+':'+pad2(Math.floor((s%3600)/60))+':'+pad2(s%60);
-  }
-
-  startTimerBtn.addEventListener('click', function(){
-    if (isTimerRunning) return;
-    var h = parseInt(document.getElementById('timer-hours').value,10) || 0;
-    var m = parseInt(document.getElementById('timer-minutes').value,10) || 0;
-    var s = parseInt(document.getElementById('timer-seconds').value,10) || 0;
-    timerSecondsLeft = h*3600 + m*60 + s;
-    if (timerSecondsLeft <= 0){ alert('لطفاً زمان معتبر وارد کنید'); return; }
-    isTimerRunning = true;
-    startTimerBtn.disabled = true;
-    stopTimerBtn.disabled  = false;
-    timerDisplay.textContent = formatDuration(timerSecondsLeft);
-    timerInterval = setInterval(function(){
-      timerSecondsLeft--;
-      timerDisplay.textContent = formatDuration(timerSecondsLeft);
-      if (timerSecondsLeft <= 0){
-        clearInterval(timerInterval);
-        isTimerRunning = false;
-        startTimerBtn.disabled = false;
-        stopTimerBtn.disabled  = true;
-        try{ timerSound.currentTime=0; timerSound.play().catch(function(){}); }catch(e){}
-        alert('زمان تایمر به پایان رسید!');
-      }
-    }, 1000);
-  });
-
-  stopTimerBtn.addEventListener('click', function(){
-    clearInterval(timerInterval);
-    isTimerRunning = false;
-    startTimerBtn.disabled = false;
-    stopTimerBtn.disabled  = true;
-  });
-
-  resetTimerBtn.addEventListener('click', function(){
-    clearInterval(timerInterval);
-    isTimerRunning = false;
-    timerSecondsLeft = 0;
-    timerDisplay.textContent = '00:00:00';
-    startTimerBtn.disabled = false;
-    stopTimerBtn.disabled  = true;
-  });
-
-  /* ==================== کرنومتر ==================== */
-  var startSwBtn = document.getElementById('start-stopwatch');
-  var stopSwBtn  = document.getElementById('stop-stopwatch');
-  var lapSwBtn   = document.getElementById('lap-stopwatch');
-  var resetSwBtn = document.getElementById('reset-stopwatch');
-  var swDisplay  = document.getElementById('stopwatch-display');
-  var lapList    = document.getElementById('lap-list');
-
-  function formatSw(ms){
-    var total = Math.floor(ms/1000);
-    var h = pad2(Math.floor(total/3600));
-    var m = pad2(Math.floor((total%3600)/60));
-    var s = pad2(total%60);
-    var cs = pad2(Math.floor((ms%1000)/10));
-    return h+':'+m+':'+s+'.'+cs;
-  }
-
-  startSwBtn.addEventListener('click', function(){
-    if (isStopwatchRunning) return;
-    isStopwatchRunning = true;
-    stopwatchStartTime = Date.now() - stopwatchElapsed;
-    startSwBtn.disabled = true;
-    stopSwBtn.disabled  = false;
-    lapSwBtn.disabled   = false;
-    stopwatchInterval = setInterval(function(){
-      stopwatchElapsed = Date.now() - stopwatchStartTime;
-      swDisplay.textContent = formatSw(stopwatchElapsed);
-    }, 10);
-  });
-
-  stopSwBtn.addEventListener('click', function(){
-    clearInterval(stopwatchInterval);
-    isStopwatchRunning = false;
-    startSwBtn.disabled = false;
-    stopSwBtn.disabled  = true;
-    lapSwBtn.disabled   = true;
-  });
-
-  lapSwBtn.addEventListener('click', function(){
-    laps.push(stopwatchElapsed);
-    var div = document.createElement('div');
-    div.className = 'lap-item';
-    div.innerHTML = '<span>دور '+laps.length+'</span><span>'+formatSw(stopwatchElapsed)+'</span>';
-    lapList.appendChild(div);
-  });
-
-  resetSwBtn.addEventListener('click', function(){
-    clearInterval(stopwatchInterval);
-    isStopwatchRunning = false;
-    stopwatchElapsed = 0;
-    laps = [];
-    swDisplay.textContent = '00:00:00.00';
-    lapList.innerHTML = '<h3>دورها</h3>';
-    startSwBtn.disabled = false;
-    stopSwBtn.disabled  = true;
-    lapSwBtn.disabled   = true;
-        startTimerBtn.addEventListener('click', () => {
-            if (isTimerRunning) return;
-            const h = parseInt(document.getElementById('timer-hours').value, 10) || 0;
-            const m = parseInt(document.getElementById('timer-minutes').value, 10
+"use strict";
+var alarms=[],timerInterval=null,timerSecondsLeft=0,isTimerRunning=false;
+var stopwatchInterval=null,stopwatchStartTime=0,stopwatchElapsed=0,isStopwatchRunning=false,laps=[];
+var alarmSound=document.getElementById('alarm-sound');
+var timerSound=document.getElementById('timer-sound');
+var worldCities=[
+{id:'Asia/Tehran',name:'تهران',lat:35.68,lng:51.38,color:'#EA4335'},
+{id:'America/New_York',name:'نیویورک',lat:40.71,lng:-74.01,color:'#4285F4'},
+{id:'Europe/London',name:'لندن',lat:51.51,lng:-0.13,color:'#34A853'},
+{id:'Asia/Tokyo',name:'توکیو',lat:35.68,lng:139.77,color:'#FBBC05'},
+{id:'Australia/Sydney',name:'سیدنی',lat:-33.87,lng:151.21,color:'#9C27B0'},
+{id:'Europe/Paris',name:'پاریس',lat:48.86,lng:2.35,color:'#FF9800'},
+{id:'Asia/Dubai',name:'دبی',lat:25.27,lng:55.31,color:'#00BCD4'},
+{id:'Asia/Shanghai',name:'شانگهای',lat:31.23,lng:121.47,color:'#8BC34A'}
+];
+var selectedCity=worldCities[0];
+var sleepSchedule={manualBedtime:null,manualWakeupTime:null,autoDetectionEnabled:false,defaultSleepDuration:8.5,lastInteractionTime:null,sleepModeActive:false};
+var sleepHistory=[];
+function pad2(n){return (n<10?'0':'')+n;}
+function formatHM(d){return pad2(d.getHours())+':'+pad2(d.getMinutes());}
+function activateSleepMode(){if(sleepSchedule.sleepModeActive)return;document.body.classList.add('sleep-mode');sleepSchedule.sleepModeActive=true;sleepHistory.push({bedtime:new Date(),wakeupTime:null,autoDetected:true});saveSleepData();renderSleepHistory();}
+function deactivateSleepMode(){if(!sleepSchedule.sleepModeActive)return;document.body.classList.remove('sleep-mode');sleepSchedule.sleepModeActive=false;if(sleepHistory.length>0&&!sleepHistory[sleepHistory.length-1].wakeupTime){sleepHistory[sleepHistory.length-1].wakeupTime=new Date();saveSleepData();renderSleepHistory();}}
+function checkUserInactivity(){if(!sleepSchedule.autoDetectionEnabled||sleepSchedule.sleepModeActive)return;var now=new Date();var h=now.getHours();if(h>=23||h<5){if(sleepSchedule.lastInteractionTime){var inactive=(now-sleepSchedule.lastInteractionTime)/(1000*60*60);if(inactive>=1){activateSleepMode();var wake=new Date();wake.setHours(wake.getHours()+sleepSchedule.defaultSleepDuration);setWakeupAlarm(wake);}}}}
+function setWakeupAlarm(w){var t=formatHM(w);if(alarms.some(function(a){return a.time===t&&a.name==='بیداری خودکار';}))return;alarms.push({time:t,name:'بیداری خودکار',triggered:false});saveAlarmsToLocalStorage();renderAlarms();}
+function saveSleepData(){try{localStorage.setItem('sleepSchedule',JSON.stringify(sleepSchedule));localStorage.setItem('sleepHistory',JSON.stringify(sleepHistory));}catch(e){}}
+function loadSleepData(){try{var s=localStorage.getItem('sleepSchedule');var h=localStorage.getItem('sleepHistory');if(s){var p=JSON.parse(s);for(var k in p)if(p.hasOwnProperty(k))sleepSchedule[k]=p[k];if(sleepSchedule.manualBedtime)sleepSchedule.manualBedtime=new Date(sleepSchedule.manualBedtime);if(sleepSchedule.manualWakeupTime)sleepSchedule.manualWakeupTime=new Date(sleepSchedule.manualWakeupTime);if(sleepSchedule.lastInteractionTime)sleepSchedule.lastInteractionTime=new Date(sleepSchedule.lastInteractionTime);}if(h){sleepHistory=JSON.parse(h).map(function(item){return{bedtime:item.bedtime?new Date(item.bedtime):null,wakeupTime:item.wakeupTime?new Date(item.wakeupTime):null,autoDetected:!!item.autoDetected};});}}catch(e){}}
+function saveAlarmsToLocalStorage(){try{localStorage.setItem('alarms',JSON.stringify(alarms));}catch(e){}}
+function loadAlarmsFromLocalStorage(){try{var s=localStorage.getItem('alarms');if(s)alarms=JSON.parse(s);}catch(e){}}
+function renderSleepHistory(){var list=document.getElementById('sleep-history-list');list.innerHTML='';if(sleepHistory.length===0){list.innerHTML='<p>تاریخچه‌ای وجود ندارد</p>';return;}var recent=sleepHistory.slice(-10).reverse();recent.forEach(function(item){var div=document.createElement('div');div.className='item';var bt=item.bedtime?item.bedtime.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'}):'--:--';var bd=item.bedtime?item.bedtime.toLocaleDateString('fa-IR'):'';var wt=item.wakeupTime?'<span class="wakeup-time">'+item.wakeupTime.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})+'</span>':'<span>در حال خواب</span>';div.innerHTML='<div><span class="sleep-time">'+bt+'</span> → '+wt+'<div class="date">'+bd+'</div></div><div>'+(item.autoDetected?'خودکار':'دستی')+'</div>';list.appendChild(div);});}
+function updateClock(){var now=new Date();document.getElementById('hours-minutes').textContent=formatHM(now);document.getElementById('seconds').textContent=pad2(now.getSeconds());document.getElementById('date').textContent=now.toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});checkAlarms(now);updateWorldClock();checkUserInactivity();checkManualSleepSchedule(now);}
+function checkManualSleepSchedule(now){if(!sleepSchedule.manualBedtime||!sleepSchedule.manualWakeupTime)return;var cur=now.getHours()*60+now.getMinutes();var bed=sleepSchedule.manualBedtime.getHours()*60+sleepSchedule.manualBedtime.getMinutes();var wake=sleepSchedule.manualWakeupTime.getHours()*60+sleepSchedule.manualWakeupTime.getMinutes();var inSleep=(bed<wake)?(cur>=bed&&cur<wake):(cur>=bed||cur<wake);if(inSleep&&!sleepSchedule.sleepModeActive)activateSleepMode();else if(!inSleep&&sleepSchedule.sleepModeActive)deactivateSleepMode();}
+function checkAlarms(now){if(now.getSeconds()!==0)return;var t=formatHM(now);alarms.forEach(function(alarm){if(alarm.time===t&&!alarm.triggered){alarm.triggered=true;triggerAlarm(alarm);setTimeout(function(){alarm.triggered=false;},60000);}});}
+function triggerAlarm(alarm){if(sleepSchedule.sleepModeActive)deactivateSleepMode();try{alarmSound.currentTime=0;alarmSound.play().catch(function(){});}catch(e){}var title=alarm.name||'آلارم';if('Notification' in window&&Notification.permission==='granted'){try{new Notification('زمان '+title+' رسیده است',{body:'ساعت '+alarm.time});}catch(e){}}alert('آلارم '+title+'!\nساعت '+alarm.time);}
+function renderAlarms(){var list=document.getElementById('alarms-list');list.innerHTML='<h3>آلارم‌های فعال</h3>';if(alarms.length===0){list.innerHTML+='<p>هیچ آلارمی تنظیم نشده است</p>';return;}alarms.forEach(function(alarm,idx){var div=document.createElement('div');div.className='item';div.innerHTML='<div><strong>'+alarm.time+'</strong>'+(alarm.name?' - '+alarm.name:'')+'</div><button class="delete-btn" data-index="'+idx+'">حذف</button>';list.appendChild(div);});list.querySelectorAll('.delete-btn').forEach(function(btn){btn.addEventListener('click',function(){var i=parseInt(this.getAttribute('data-index'),10);alarms.splice(i,1);saveAlarmsToLocalStorage();renderAlarms();});});}
+function getTimeParts(tz,withSec){var opts={timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false};if(withSec)opts.second='2-digit';var parts=new Intl.DateTimeFormat('en-GB',opts).formatToParts(new Date());var out={};parts.forEach(function(p){out[p.type]=p.value;});return out;}
+function updateWorldClock(){var t=getTimeParts(selectedCity.id,true);document.getElementById('selected-city-time').textContent=t.hour+':'+t.minute+':'+t.second;document.getElementById('selected-city-name').textContent=selectedCity.name;document.getElementById('selected-city-date').textContent=new Intl.DateTimeFormat('fa-IR',{timeZone:selectedCity.id,weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(new Date());updateAllCitiesTime();}
+function updateAllCitiesTime(){var grid=document.getElementById('cities-grid');grid.innerHTML='';worldCities.forEach(function(city){var t=getTimeParts(city.id,false);var card=document.createElement('div');card.className='city-card'+(city.id===selectedCity.id?' active':'');card.innerHTML='<div class="city-name">'+city.name+'</div><div class="city-time-small">'+t.hour+':'+t.minute+'</div>';card.addEventListener('click',function(){selectCity(city);});grid.appendChild(card);});}
+function selectCity(city){selectedCity=city;document.getElementById('city-selector').value=city.id;updateWorldClock();renderGlobeMarkers();}
+function renderGlobeMarkers(){var globe=document.getElementById('globe');globe.innerHTML='';worldCities.forEach(function(city){var marker=document.createElement('div');marker.className='city-marker';marker.setAttribute('data-city',city.name);marker.style.backgroundColor=city.color;var x=50+45*Math.cos((city.lng-90)*Math.PI/180)*Math.cos(city.lat*Math.PI/180);var y=50+45*Math.sin((city.lng-90)*Math.PI/180)*Math.cos(city.lat*Math.PI/180);marker.style.left=x+'%';marker.style.top=y+'%';if(city.id===selectedCity.id){marker.style.width='12px';marker.style.height='12px';marker.style.boxShadow='0 0 10px '+city.color;}marker.addEventListener('click',function(){selectCity(city);});globe.appendChild(marker);});}
+function initTabs(){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++){tabs[i].addEventListener('click',function(){var all=document.querySelectorAll('.tab');for(var j=0;j<all.length;j++)all[j].classList.remove('active');var contents=document.querySelectorAll('.tab-content');for(var k=0;k<contents.length;k++)contents[k].classList.remove('active');this.classList.add('active');var el=document.getElementById(this.getAttribute('data-tab'));if(el)el.classList.add('active');});}}
+document.getElementById('set-alarm').addEventListener('click',function(){var time=document.getElementById('alarm-time').value;var name=document.getElementById('alarm-name').value.trim();if(!time){alert('لطفاً زمان آلارم را وارد کنید');return;}alarms.push({time:time,name:name,triggered:false});saveAlarmsToLocalStorage();renderAlarms();document.getElementById('alarm-time').value='';document.getElementById('alarm-name').value='';});
+var startTimerBtn=document.getElementById('start-timer');
+var stopTimerBtn=document.getElementById('stop-timer');
+var resetTimerBtn=document.getElementById('reset-timer');
+var timerDisplay=document.getElementById('timer-display');
+function formatDuration(s){return pad2(Math.floor(s/3600))+':'+pad2(Math.floor((s%3600)/60))+':'+pad2(s%60);}
+startTimerBtn.addEventListener('click',function(){if(isTimerRunning)return;var h=parseInt(document.getElementById('timer-hours').value,10)||0;var m=parseInt(document.getElementById('timer-minutes').value,10)||0;var s=parseInt(document.getElementById('timer-seconds').value,10)||0;timerSecondsLeft=h*3600+m*60+s;if(timerSecondsLeft<=0){alert('لطفاً زمان معتبر وارد کنید');return;}isTimerRunning=true;startTimerBtn.disabled=true;stopTimerBtn.disabled=false;timerDisplay.textContent=formatDuration(timerSecondsLeft);timerInterval=setInterval(function(){timerSecondsLeft--;timerDisplay.textContent=formatDuration(timerSecondsLeft);if(timerSecondsLeft<=0){clearInterval(timerInterval);isTimerRunning=false;startTimerBtn.disabled=false;stopTimerBtn.disabled=true;try{timerSound.currentTime=0;timerSound.play().catch(function(){});}catch(e){}alert('زمان تایمر به پایان رسید!');}},1000);});
+stopTimerBtn.addEventListener('click',function(){clearInterval(timerInterval);isTimerRunning=false;startTimerBtn.disabled=false;stopTimerBtn.disabled=true;});
+resetTimerBtn.addEventListener('click',function(){clearInterval(timerInterval);isTimerRunning=false;timerSecondsLeft=0;timerDisplay.textContent='00:00:00';startTimerBtn.disabled=false;stopTimerBtn.disabled=true;});
+var startSwBtn=document.getElementById('start-stopwatch');
+var stopSwBtn=document.getElementById('stop-stopwatch');
+var lapSwBtn=document.getElementById('lap-stopwatch');
+var resetSwBtn=document.getElementById('reset-stopwatch');
+var swDisplay=document.getElementById('stopwatch-display');
+var lapList=document.getElementById('lap-list');
+function formatSw(ms){var total=Math.floor(ms/1000);var h=pad2(Math.floor(total/3600));var m=pad2(Math.floor((total%3600)/60));var s=pad2(total%60);var cs=pad2(Math.floor((ms%1000)/10));return h+':'+m+':'+s+'.'+cs;}
+startSwBtn.addEventListener('click',function(){if(isStopwatchRunning)return;isStopwatchRunning=true;stopwatchStartTime=Date.now()-stopwatchElapsed;startSwBtn.disabled=true;stopSwBtn.disabled=false;lapSwBtn.disabled=false;stopwatchInterval=setInterval(function(){stopwatchElapsed=Date.now()-stopwatchStartTime;swDisplay.textContent=formatSw(stopwatchElapsed);},10);});
+stopSwBtn.addEventListener('click',function(){clearInterval(stopwatchInterval);isStopwatchRunning=false;startSwBtn.disabled=false;stopSwBtn.disabled=true;lapSwBtn.disabled=true;});
+lapSwBtn.addEventListener('click',function(){laps.push(stopwatchElapsed);var div=document.createElement('div');div.className='lap-item';div.innerHTML='<span>دور '+laps.length+'</span><span>'+formatSw(stopwatchElapsed)+'</span>';lapList.appendChild(div);});
+resetSwBtn.addEventListener('click',function(){clearInterval(stopwatchInterval);isStopwatchRunning=false;stopwatchElapsed=0;laps=[];swDisplay.textContent='00:00:00.00';lapList.innerHTML='<h3>دورها</h3>';startSwBtn.disabled=false;stopSwBtn.disabled=true;lapSwBtn.disabled=true;});
+document.getElementById('city-selector').addEventListener('change',function(e){var city=worldCities.find(function(c){return c.id===e.target.value;});if(city)selectCity(city);});
+document.getElementById('set-sleep-schedule').addEventListener('click',function(){var bedtime=document.getElementById('bedtime').value;var wakeup=document.getElementById('wakeup-time').value;if(!bedtime||!wakeup){alert('لطفاً ساعت خواب و بیداری را وارد کنید');return;}var bp=bedtime.split(':');var wp=wakeup.split(':');var bd=new Date();bd.setHours(parseInt(bp[0],10),parseInt(bp[1],10),0,0);var wd=new Date();wd.setHours(parseInt(wp[0],10),parseInt(wp[1],10),0,0);sleepSchedule.manualBedtime=bd;sleepSchedule.manualWakeupTime=wd;saveSleepData();alert('برنامه خواب تنظیم شد');});
+document.getElementById('auto-sleep-detection').addEventListener('change',function(e){sleepSchedule.autoDetectionEnabled=e.target.checked;saveSleepData();});
+document.getElementById('default-sleep-duration').addEventListener('change',function(e){sleepSchedule.defaultSleepDuration=parseFloat(e.target.value)||8.5;saveSleepData();});
+['click','keydown','touchstart','mousemove'].forEach(function(ev){document.addEventListener(ev,function(){sleepSchedule.lastInteractionTime=new Date();});});
+function init(){loadAlarmsFromLocalStorage();loadSleepData();renderAlarms();renderSleepHistory();renderGlobeMarkers();initTabs();if(sleepSchedule.manualBedtime){var h=pad2(sleepSchedule.manualBedtime.getHours());var m=pad2(sleepSchedule.manualBedtime.getMinutes());document.getElementById('bedtime').value=h+':'+m;}if(sleepSchedule.manualWakeupTime){var h2=pad2(sleepSchedule.manualWakeupTime.getHours());var m2=pad2(sleepSchedule.manualWakeupTime.getMinutes());document.getElementById('wakeup-time').value=h2+':'+m2;}document.getElementById('auto-sleep-detection').checked=sleepSchedule.autoDetectionEnabled;document.getElementById('default-sleep-duration').value=sleepSchedule.defaultSleepDuration;updateClock();setInterval(updateClock,1000);if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission();}catch(e){}}}
+init();
+})();
+</script>
+</body>
+</html>
